@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sam.dao.SysUserMapper">
+
+    <!-- 通用的resultMap -->
+    <resultMap id="BaseResultMap" type="com.sam.pojo.SysUser">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="userName" jdbcType="VARCHAR" property="userName" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="realName" jdbcType="VARCHAR" property="realName" />
+        <result column="sex" jdbcType="INTEGER" property="sex" />
+        <result column="deptId" jdbcType="INTEGER" property="deptId" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="userType" jdbcType="INTEGER" property="userType" />
+        <result column="hireDate" jdbcType="TIMESTAMP" property="hireDate" />
+        <result column="createdBy" jdbcType="INTEGER" property="createdBy" />
+        <result column="createDate" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="modifyBy" jdbcType="INTEGER" property="modifyBy" />
+        <result column="modifyDate" jdbcType="TIMESTAMP" property="modifyDate" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+    </resultMap>
+
+    <!--定义resultMap-->
+    <resultMap id="SysUserRoleListResultMap" type="com.sam.pojo.SysUser" extends="BaseResultMap">
+        <!--一个用户可以拥有多个角色-->
+        <collection property="roleList" ofType="com.sam.pojo.Role" column="id" select="com.sam.dao.RoleMapper.findRoleListByUserId"/>
+    </resultMap>
+
+    <!--根据用户名查询用户信息，对应登录功能-->
+    <select id="findSysUserByUserName" resultMap="SysUserRoleListResultMap">
+        SELECT *
+        FROM sys_user
+        WHERE userName=#{userName}
+    </select>
+
+    <!--根据部门编号查询员工信息（用于删除部门前的校验）-->
+    <select id="selectSysUserByDeptId" resultType="com.sam.pojo.SysUser">
+        SELECT *
+        FROM sys_user
+        WHERE deptId=#{deptId}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sam.dao.DeptMapper">
+
+    <!--通用的resultMap-->
+    <resultMap id="BaseResultMap" type="com.sam.pojo.Dept">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="deptName" jdbcType="VARCHAR" property="deptName" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="createDate" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+    </resultMap>
+
+    <!--查询部门列表（对应后台部门列表展示,以及根据部门名称模糊查询）-->
+    <select id="findDeptList" resultType="com.sam.pojo.Dept">
+        SELECT *
+        FROM sys_dept
+        <where>
+            <if test="deptName!=null and deptName!='' ">
+                and deptName like concat('%',#{deptName},'%')
+            </if>
+        </where>
+        ORDER BY id
+    </select>
+
+    <!--添加部门-->
+    <insert id="insertDept" >
+        INSERT INTO sys_dept (deptName, address,
+                                createDate, remark)
+        VALUES ( #{deptName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+                #{createDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+    </insert>
+
+    <!--修改部门-->
+    <update id="updateDept">
+        UPDATE sys_dept
+        <set>
+            <if test="deptName != null and deptName!=''">
+                deptName = #{deptName,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null and deptName!=''">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                createDate = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null and remark!=''">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--删除部门-->
+    <delete id="deleteDeptById">
+        DELETE  from sys_dept WHERE id=#{id}
+    </delete>
+
+
+</mapper>

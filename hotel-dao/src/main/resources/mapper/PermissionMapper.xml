@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sam.dao.PermissionMapper">
+    <!-- 通用的resultMap -->
+    <resultMap id="BaseResultMap" type="com.sam.pojo.Permission">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="pid" jdbcType="INTEGER" property="pid" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="permissionCode" jdbcType="VARCHAR" property="permissionCode" />
+        <result column="icon" jdbcType="VARCHAR" property="icon" />
+        <result column="href" jdbcType="VARCHAR" property="href" />
+        <result column="spread" jdbcType="INTEGER" property="spread" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="target" jdbcType="VARCHAR" property="target" />
+    </resultMap>
+
+    <!-- 查询权限列表（对应加载首页菜单功能）-->
+    <select id="findPermissionList" resultType="com.sam.pojo.Permission">
+        SELECT *
+        FROM sys_permission
+        <where>
+            <if test=" type!=null and type!='' ">
+                type =#{type}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

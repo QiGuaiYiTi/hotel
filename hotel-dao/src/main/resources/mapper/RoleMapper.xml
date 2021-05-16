@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sam.dao.RoleMapper">
+
+    <!--通用的resultMap-->
+    <resultMap id="BaseResultMap" type="com.sam.pojo.Role">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="roleCode" jdbcType="VARCHAR" property="roleCode" />
+        <result column="roleName" jdbcType="VARCHAR" property="roleName" />
+        <result column="roleDesc" jdbcType="VARCHAR" property="roleDesc" />
+    </resultMap>
+
+    <!--根据用户id查询用户角色列表（用于登录时校验）-->
+    <select id="findRoleListByUserId" resultType="com.sam.pojo.Role">
+        SELECT *
+        FROM sys_role
+        WHERE id IN
+        (SELECT rid FROM sys_user_role WHERE uid=#{userId})
+    </select>
+
+
+</mapper>
