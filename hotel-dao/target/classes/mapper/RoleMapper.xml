@@ -13,6 +13,7 @@
         <result column="roleDesc" jdbcType="VARCHAR" property="roleDesc" />
     </resultMap>
 
+
     <!--根据用户id查询用户角色列表（用于登录时校验）-->
     <select id="findRoleListByUserId" resultType="com.sam.pojo.Role">
         SELECT *
@@ -21,5 +22,51 @@
         (SELECT rid FROM sys_user_role WHERE uid=#{userId})
     </select>
 
+    <!--分页查询角色列表（显示角色列表）-->
+    <select id="findRoleListByPage" resultType="com.sam.pojo.Role">
+        SELECT *
+        FROM sys_role
+        <where>
+            <if test="roleName !=null and roleName !=''">
+                roleName like concat('%',#{roleName},'%')
+            </if>
+        </where>
+        ORDER BY id
+    </select>
+
+    <!--添加角色-->
+    <insert id="insertRole" parameterType="com.sam.pojo.Role">
+        INSERT INTO sys_role ( roleCode, roleName, roleDesc)
+        VALUES ( #{roleCode,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}, #{roleDesc,jdbcType=VARCHAR})
+    </insert>
+
+    <!--修改角色-->
+    <update id="updateRole" parameterType="com.sam.pojo.Role">
+        UPDATE sys_role
+        <set>
+            <if test="roleCode != null and roleCode!=''">
+                roleCode = #{roleCode,jdbcType=VARCHAR},
+            </if>
+            <if test="roleName != null and roleName!=''">
+                roleName = #{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="roleDesc != null and roleDesc!=''">
+                roleDesc = #{roleDesc,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--根据角色编号查询该角色下的用户数量（主要用于删除角色前的判断）-->
+    <select id="findUserCountByRoleId" resultType="java.lang.Integer">
+        SELECT COUNT(uid)
+        FROM sys_user_role WHERE rid=#{roleId}
+    </select>
+
+    <!--删除角色-->
+    <delete id="deleteRole" >
+        DELETE FROM sys_role
+        WHERE id = #{id,jdbcType=INTEGER}
+  </delete>
 
 </mapper>

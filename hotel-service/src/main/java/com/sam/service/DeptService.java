@@ -14,6 +14,14 @@ public interface DeptService {
      */
     List<Dept> findDeptList(DeptVo deptVo);
 
+
+    /**
+     * 查询部门列表（用于用户管理页面加载部门下拉列表）
+     * @return
+     */
+    String selectDeptList();
+
+
     /**
      * 添加部门
      * @param dept

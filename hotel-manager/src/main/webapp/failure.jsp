@@ -53,7 +53,7 @@
         <img src="/statics/images/error.svg" alt="" width="120"/>
     </div>
     <div class="subheader">
-        访问失败，请稍后重试~    </div>
+        用户名或者密码错误，访问失败，请稍后重试~    </div>
     <div class="hr"></div>
     <div class="context">
 

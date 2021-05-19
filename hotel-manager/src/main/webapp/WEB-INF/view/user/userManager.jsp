@@ -257,10 +257,8 @@
                     curr:1
                 }
             });
-
-
             return false;
-        })
+        });
         
         
         //发送请求查询部门列表（将数据追加到部门下拉列表中）
@@ -468,7 +466,7 @@
         function initRoleData(data) {
             table.render({
                 elem: '#roleTable',
-                url: '${pageContext.request.contextPath}/admin/role/initRoleListByUserId?userId='+data.id,
+                url: '${pageContext.request.contextPath}/admin/user/initRoleListByUserId?userId='+data.id,
                 cols: [[
                     {type: "checkbox", width: 50},
                     {field: 'id', width: 100, title: '角色编号', align: "center"},

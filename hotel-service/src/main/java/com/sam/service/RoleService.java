@@ -5,6 +5,7 @@ import com.sam.pojo.Role;
 import com.sam.vo.RoleVo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RoleService {
 
@@ -43,6 +44,26 @@ public interface RoleService {
      * @return
      */
     int findUserCountByRoleId(Integer roleId);
+
+    /**
+     * 只查询角色列表
+     * @return
+     */
+    List<Map<String,Object>> selectRoleListOnly();
+
+    /**
+     * 根据用户id查询该用户已经拥有的角色id列表
+     * @return
+     */
+    List<Integer> selectRoleIdBySysUserId(Integer sysUserId);
+
+    /**
+     * 添加角色权限关系
+     * @param rid
+     * @param pid
+     * @return
+     */
+    public boolean saveRolePermission(Integer rid,String pid);
 
 
 }

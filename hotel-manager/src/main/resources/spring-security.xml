@@ -26,8 +26,6 @@ http://www.springframework.org/schema/security/spring-security.xsd">
                 login-processing-url="/login"
                 default-target-url="/index.jsp"
                 authentication-failure-url="/failure.jsp"
-                username-parameter="userName"
-                password-parameter="password"
         />
 
         <!-- 防止点击劫持攻击 -->

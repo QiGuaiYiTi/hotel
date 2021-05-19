@@ -22,4 +22,31 @@ public class PageController {
         return "dept/deptManager";
     }
 
+    /**
+     * 跳转到角色管理页面
+     * @return
+     */
+    @RequestMapping("/toRoleManager.html")
+    public String toRoleManager(){
+        return "role/roleManager";
+    }
+
+    /**
+     * 跳转到用户管理页面
+     * @return
+     */
+    @RequestMapping("/toUserManager.html")
+    public String toUserManager(){
+        return "user/userManager";
+    }
+
+    /**
+     * 跳转到权限管理页面
+     * @return
+     */
+    @RequestMapping("/toPermissionManager.html")
+    public String toPermissionManager(){
+        return "permission/permissionManager";
+    }
+
 }

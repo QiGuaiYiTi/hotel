@@ -3,15 +3,19 @@ package com.sam.controller;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sam.pojo.Permission;
 import com.sam.pojo.Role;
+import com.sam.service.PermissionService;
 import com.sam.service.RoleService;
 import com.sam.utils.DataGridViewResult;
 import com.sam.utils.RestResponse;
+import com.sam.utils.TreeNode;
 import com.sam.vo.RoleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +32,8 @@ public class RoleController {
 
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private PermissionService permissionService;
 
     /**
      * 分页查询角色列表（显示角色列表）
@@ -107,6 +113,60 @@ public class RoleController {
         }else{
             RestResponse fail = RestResponse.fail("角色删除失败");
             return JSON.toJSONString(fail);
+        }
+    }
+
+    /**
+     * 初始化权限列表树（角色管理模块，点击分配菜单按钮）
+     * @return
+     */
+    @RequestMapping("/initMenuTree")
+    public DataGridViewResult initMenuTree(Integer roleId){
+        // 查询所有菜单
+        List<Permission> permissions = permissionService.findPermissionList(null);
+        // 根据当前角色id，查询当前角色已经拥有菜单限编号集合
+        List<Integer> permissionIds = permissionService.findPermissionByRoleId(roleId);
+        //创建集合保存节点信息
+        ArrayList<TreeNode> treeNodes = new ArrayList<TreeNode>();
+
+        //循环遍历菜单列表集合
+        for (Permission permission : permissions) {
+            // 获取当前菜单的id
+            Integer permissionId = permission.getId();
+            //定义变量标识是否选中
+            String checkArr = "0"; //默认为0 ，标识不选中
+            //内存循环遍历当前角色已经拥有的菜单编号集合
+            if(permissionIds!=null || permissionIds.size()>0){
+                for (Integer id : permissionIds) {
+                    //如果 当前菜单id 和已拥有菜单id相等，则修改布尔变量的值
+                    if(permissionId==id){
+                        checkArr="1";   //标识选中
+                        break;
+                    }
+                }
+            }
+
+            //判断当前菜单是否展开
+            boolean spread = (permission.getSpread()==null || permission.getSpread()==1)? true:false;
+            //将菜单信息保存到node集合中
+            treeNodes.add(new TreeNode(permission.getId(),permission.getPid(),permission.getTitle(),spread,checkArr));
+
+        }
+        return new DataGridViewResult(treeNodes);
+    }
+
+    /**
+     * 分配权限
+     * @param rid
+     * @param pid
+     * @return
+     */
+    @RequestMapping("/saveRolePermission")
+    public String grantPermission(Integer rid,String pid){
+        if(roleService.saveRolePermission(rid,pid)){
+            return JSON.toJSONString(RestResponse.ok("权限分配成功"));
+        }else {
+            return JSON.toJSONString(RestResponse.fail("权限分配失败"));
         }
     }
 

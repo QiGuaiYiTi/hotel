@@ -11,6 +11,7 @@ import com.sam.vo.DeptVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -45,6 +46,18 @@ public class DeptController {
         //返回数据
         return new DataGridViewResult(pageInfo.getTotal(),pageInfo.getList());
     }
+
+    /**
+     * 加载用户管理页面模糊查询中部门下拉列表
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/findDeptList")
+    public String findDeptList(){
+         return deptService.selectDeptList();
+    }
+
+
 
     /**
      * 添加部门

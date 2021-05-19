@@ -25,6 +25,13 @@
         ORDER BY id
     </select>
 
+    <!-- 查询部门列表（用于用户管理页面加载部门下拉列表）-->
+    <select id="selectDeptList" resultType="com.sam.pojo.Dept">
+        SELECT *
+        FROM sys_dept
+        ORDER BY id
+    </select>
+
     <!--添加部门-->
     <insert id="insertDept" >
         INSERT INTO sys_dept (deptName, address,

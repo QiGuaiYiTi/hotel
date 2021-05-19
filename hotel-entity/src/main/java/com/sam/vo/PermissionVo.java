@@ -11,4 +11,8 @@ import lombok.Data;
  */
 @Data
 public class PermissionVo extends Permission {
+
+    private Integer page;
+    private Integer limit;
+
 }

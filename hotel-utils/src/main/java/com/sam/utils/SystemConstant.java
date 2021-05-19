@@ -15,4 +15,11 @@ public interface SystemConstant {
     public static boolean TRUE = true;
     //代表执行失败(或者数据不存在)
     public static  boolean FALSE  = false;
+    //Redis的key
+    public static String DEPTLIST = "deptList";
+
+    /**
+     * 默认密码
+     */
+    public static String DEFAULT_PASSWORD = "123456";
 }

@@ -3,13 +3,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<%--    <!-- 获取CSRF Token -->--%>
-<%--    <meta name="_csrf" content="${_csrf.token}"/>--%>
-<%--    <!-- 获取CSRF头，默认为X-CSRF-TOKEN -->--%>
-<%--    <meta name="_csrf_header" content="${_csrf.headerName}"/>--%>
-
-
     <meta charset="UTF-8">
     <title>酒店后台管理-登陆</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -75,7 +68,7 @@
             <div class="center">
                 <div class="item">
                     <span class="icon icon-2"></span>
-                    <input id="loginName" type="text" name="userName" lay-verify="required" lay-reqText="请输入登录账号"  placeholder="请输入登录账号" maxlength="24"/>
+                    <input type="text" name="username" lay-verify="required" lay-reqText="请输入登录账号"  placeholder="请输入登录账号" maxlength="24"/>
                 </div>
 
                 <div class="item">
@@ -96,58 +89,18 @@
                 <a href="javascript:" class="forget-password">忘记密码？</a>
             </div>
             <div class="layui-form-item" style="text-align:center; width:100%;height:100%;margin:0px;">
-                <button class="login-btn" id="submit" >立即登录</button>
+                <button class="login-btn">立即登录</button>
             </div>
         </form>
     </div>
 </div>
 
 <script src="${pageContext.request.contextPath}/statics/layui/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
-<script src="${pageContext.request.contextPath}/statics/layui/lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
 <script>
     layui.use(['form','jquery','layer'], function () {
         var $ = layui.jquery,
             form = layui.form,
             layer = layui.layer;
-
-        //
-        // //获取<meta>标签中封装的CSRF Token
-        // var token = $("meta[name='_csrf']").attr("content");
-        // var header = $("meta[name='_csrf_header']").attr("content");
-        // //将头中的CSRF Token信息进行发送
-        // $(document).ajaxSend(function (e,xhr,options) {
-        //     xhr.setRequestHeader(header,token);
-        // });
-
-
-        //监听提交按钮
-        $("#loginName").blur(function () {
-            //layer.alert("hello");
-            //获取当前标签内容
-            var userName = $("input[name=userName]").val();
-            //若不为空，发送AJAX请求
-            if(userName.length>0){
-                //layer.alert(userName)
-                $.post("${pageContext.request.contextPath}/admin/SysUser/checkUserNameExist",{"userName":userName},function (result) {
-                    if(result==null){
-                        layer.alert("xxx");
-                        layer.alert("用户名不存在，请重新输入",{icon:2})
-                    }else{
-                        layer.alert("用户名可用",{icon:1})
-                    }
-                },"json");
-               return false;
-            }
-        });
-
-
-
-
-
-
-
-
-
 
         // 登录过期的时候，跳出ifram框架
         if (top.location != self.location) top.location = self.location;

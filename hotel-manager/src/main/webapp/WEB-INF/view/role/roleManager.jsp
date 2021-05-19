@@ -313,7 +313,7 @@
                             //将数组转换成字符串
                             var ids = idArr.join(",");
                             //发送请求
-                            $.post("/admin/role/saveRolePermission",{"permissionIds":ids,"roleId":data.id},function(result){
+                            $.post("/admin/role/saveRolePermission",{"pid":ids,"rid":data.id},function(result){
                                 if(result.success){
                                     layer.alert(result.message,{icon:1});
                                 }else{

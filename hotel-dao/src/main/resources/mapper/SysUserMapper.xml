@@ -24,14 +24,24 @@
         <result column="remark" jdbcType="VARCHAR" property="remark" />
     </resultMap>
 
-    <!--定义resultMap-->
-    <resultMap id="SysUserRoleListResultMap" type="com.sam.pojo.SysUser" extends="BaseResultMap">
+    <!--用户角色resultMap-->
+    <resultMap id="sysUserRoleListResultMap" type="com.sam.pojo.SysUser" extends="BaseResultMap">
         <!--一个用户可以拥有多个角色-->
         <collection property="roleList" ofType="com.sam.pojo.Role" column="id" select="com.sam.dao.RoleMapper.findRoleListByUserId"/>
     </resultMap>
 
+    <!--定义用户部门关系映射-->
+    <resultMap id="sysUserDeptResultMap" type="com.sam.pojo.SysUser" extends="BaseResultMap">
+        <!--一对一-->
+        <association property="dept" javaType="com.sam.pojo.Dept">
+            <id property="id" column="id"/>
+            <result property="deptName" column="deptName"/>
+        </association>
+    </resultMap>
+    
+    
     <!--根据用户名查询用户信息，对应登录功能-->
-    <select id="findSysUserByUserName" resultMap="SysUserRoleListResultMap">
+    <select id="findSysUserByUserName" resultMap="sysUserRoleListResultMap">
         SELECT *
         FROM sys_user
         WHERE userName=#{userName}
@@ -44,5 +54,121 @@
         WHERE deptId=#{deptId}
     </select>
 
+    <!--分页查询用户信息，包括部门名称（需要连表）-->
+    <select id="selectSysUserListByPage" resultMap="sysUserDeptResultMap">
+        SELECT t1.*,t2.deptName
+        FROM sys_user t1
+        JOIN sys_dept t2
+        ON t1.deptId=t2.id
+        <where>
+            <if test=" userName!=null and userName!='' ">
+                and t1.userName like concat('%',#{userName},'%')
+            </if>
+            <if test=" realName!=null and realName!='' ">
+                and t1.realName like concat('%',#{realName},'%')
+            </if>
+            <if test=" sex!=null ">
+                and t1.sex=#{sex}
+            </if>
+            <if test=" sex!=null ">
+                and t1.sex=#{sex}
+            </if>
+            <if test=" status!=null ">
+                and t1.status=#{status}
+            </if>
+            <if test=" deptId!=null ">
+                and t1.deptId=#{deptId}
+            </if>
+            <if test=" startDate!=null ">
+                <![CDATA[ and t1.hireDate>=#{startDate} ]]>
+            </if>
+            <if test=" endDate!=null ">
+                <![CDATA[ and t1.hireDate<=#{endDate} ]]>
+            </if>
+            <if test=" userType!=null ">
+                and t1.userType=#{userType}
+            </if>
+        </where>
+        ORDER BY t1.id
+    </select>
+
+    <!--添加员工-->
+    <insert id="insetSysUser" >
+        INSERT INTO sys_user (userName, password,
+          realName, sex, deptId,
+          status, email, phone,
+          userType, hireDate, createdBy,
+          createDate,remark)
+        VALUES ( #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+          #{realName,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{deptId,jdbcType=INTEGER},
+          #{status,jdbcType=INTEGER}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+          #{userType,jdbcType=INTEGER}, #{hireDate,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=INTEGER},
+          #{createDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+  </insert>
+
+    <!--修改员工-->
+    <update id="updateSysUserById">
+        UPDATE sys_user
+        <set>
+            <if test="userName != null and userName!=''">
+                userName = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null and password!=''">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null and realName!=''">
+                realName = #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=INTEGER},
+            </if>
+            <if test="deptId != null">
+                deptId = #{deptId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="email != null and email!=''">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null  and phone!=''">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="userType != null ">
+                userType = #{userType,jdbcType=INTEGER},
+            </if>
+            <if test="hireDate != null">
+                hireDate = #{hireDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdBy != null">
+                createdBy = #{createdBy,jdbcType=INTEGER},
+            </if>
+            <if test="createDate != null">
+                createDate = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyBy != null">
+                modifyBy = #{modifyBy,jdbcType=INTEGER},
+            </if>
+            <if test="modifyDate != null">
+                modifyDate = #{modifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null  and remark!=''">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--删除员工角色关系-->
+    <delete id="deleteSysUserRoleById" parameterType="integer">
+        DELETE FROM sys_user_role
+        WHERE uid=#{id}
+    </delete>
+
+    <!--删除员工-->
+    <delete id="deleteSysUserById" parameterType="integer">
+        DELETE FROM sys_user
+        WHERE id = #{id}
+    </delete>
 
 </mapper>

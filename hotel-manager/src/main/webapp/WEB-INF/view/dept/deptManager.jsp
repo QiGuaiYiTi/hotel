@@ -63,7 +63,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">部门名称</label>
                     <div class="layui-input-block">
-                        <input type="text" name="deptName" lay-verify="required" autocomplete="off"
+                        <input type="text" name="deptName" lay-verify="deptName|required" autocomplete="off"
                                placeholder="请输入部门名称" class="layui-input">
                     </div>
                 </div>
@@ -200,6 +200,7 @@
                 }
             });
         }
+
 
         //监听表单提交事件
         form.on("submit(doSubmit)",function (data) {

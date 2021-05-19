@@ -24,8 +24,126 @@
             <if test=" type!=null and type!='' ">
                 type =#{type}
             </if>
+            <if test="id !=null">
+                id = #{id} or pid = #{id} /*当点击菜单节点时，显示当前菜单以及子菜单*/
+            </if>
         </where>
     </select>
 
+    <!--添加菜单-->
+    <insert id="insetPermission" parameterType="com.sam.pojo.Permission">
+        INSERT INTO sys_permission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="pid != null">
+                pid,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="permissionCode != null">
+                permissionCode,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="href != null">
+                href,
+            </if>
+            <if test="spread != null">
+                spread,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="target != null">
+                target,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="pid != null">
+                #{pid,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="permissionCode != null">
+                #{permissionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="href != null">
+                #{href,jdbcType=VARCHAR},
+            </if>
+            <if test="spread != null">
+                #{spread,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="target != null">
+                #{target,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!--修改菜单-->
+    <update id="updatePermission" parameterType="com.sam.pojo.Permission">
+        UPDATE sys_permission
+        <set>
+            <if test="pid != null">
+                pid = #{pid,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="permissionCode != null">
+                permissionCode = #{permissionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                icon = #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="href != null">
+                href = #{href,jdbcType=VARCHAR},
+            </if>
+            <if test="spread != null">
+                spread = #{spread,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="target != null">
+                target = #{target,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--删除菜单-->
+    <delete id="deletePermission" parameterType="java.lang.Integer">
+        DELETE FROM sys_permission
+        WHERE id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <!--根据角色id查询菜单权限id-->
+    <select id="selectPermissionByRoleId" resultType="java.lang.Integer">
+        SELECT pid FROM sys_role_permission WHERE rid=#{roleId}
+    </select>
+    <!--根据当前用户id，查询当前用户的菜单权限集合,用于动态显示菜单列表-->
+    <select id="findPermissionListByUserId" resultType="com.sam.pojo.Permission">
+        SELECT  DISTINCT t1.*
+        FROM sys_permission t1
+        JOIN sys_role_permission t2
+        ON t1.id=t2.pid
+        JOIN sys_user_role t3
+        ON t2.rid=t3.rid
+        WHERE t3.uid=#{id}
+    </select>
 
 </mapper>
